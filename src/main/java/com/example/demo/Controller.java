@@ -80,5 +80,9 @@ public class Controller {
         return new ResponseEntity<String>("PATCH Response", HttpStatus.OK);
     }
 
-
+    @GetMapping("/songs/find")
+    @ResponseBody
+    public String getFoos(@RequestParam String id) {
+        return "ID: " + id;
+    }
 }
