@@ -69,6 +69,12 @@ public class Controller {
 
     }
 
+    @DeleteMapping("/songs/delete/{id}")
+    void deleteSong(@PathVariable Long id){
+        songRepository.deleteById(id);
+
+    }
+
   /*  @PatchMapping("/songs/patch/{id}")
     public ResponseEntity<?> partialUpdateName(
             @RequestBody SongResourceTitleOnly partialUpdate, @PathVariable("id") String id) {
