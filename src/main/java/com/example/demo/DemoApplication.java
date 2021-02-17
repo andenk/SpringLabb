@@ -1,6 +1,5 @@
 package com.example.demo;
-// i application propeties vid uppstart
-// spring.jpa.hibernate.dialect=org.hibernate.dialect.SQLServerDialect
+
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 

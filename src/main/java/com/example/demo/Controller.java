@@ -2,19 +2,13 @@ package com.example.demo;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
 
 
-/*
-Gamla Vägen
-
-@Controller
-@Rest
-
- */
 @RestController
 public class Controller {
 
@@ -49,13 +43,39 @@ public class Controller {
                 "id " + id + " Not Found"));
 
     }
-    //HttpEntity<byte[]> requestEntity  För att få tillbacka hela bodyn som bit
+
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     public Song create(@RequestBody Song song){
        return songRepository.save(song);
 
     }
+    @PutMapping("/songs/put/{id}")
+    public Song saveResource(@RequestBody Song newSong,
+                                          @PathVariable("id") Long id) {
+        return songRepository.findById(id)
+                .map(song -> {
+                    song.setTitle(newSong.getTitle());
+                    song.setSongLength(newSong.getSongLength());
+                    return songRepository.save(song);
+                })
+                .orElseGet(() -> {
+                    newSong.setId(id);
+                    return songRepository.save(newSong);
+                });
 
+
+
+
+    }
+
+  /*  @PatchMapping("/songs/patch/{id}")
+    public ResponseEntity<?> partialUpdateName(
+            @RequestBody SongResourceTitleOnly partialUpdate, @PathVariable("id") String id) {
+
+        return songRepository.save(partialUpdate, id);
+         ResponseEntity.ok("resource address updated");
+    }
+*/
 
 }
