@@ -82,7 +82,9 @@ public class Controller {
 
     @GetMapping("/songs/find")
     @ResponseBody
-    public String getFoos(@RequestParam String id) {
-        return "ID: " + id;
+    public Song getParameters(@RequestParam Long id) {
+        var idLength =songRepository.findById(id);
+        return idLength.orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "id " + id + " Not Found"));
+
     }
 }
