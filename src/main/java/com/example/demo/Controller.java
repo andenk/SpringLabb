@@ -75,13 +75,10 @@ public class Controller {
 
     }
 
-  /*  @PatchMapping("/songs/patch/{id}")
-    public ResponseEntity<?> partialUpdateName(
-            @RequestBody SongResourceTitleOnly partialUpdate, @PathVariable("id") String id) {
-
-        return songRepository.save(partialUpdate, id);
-         ResponseEntity.ok("resource address updated");
+    @PatchMapping("/patch")
+    public @ResponseBody ResponseEntity<String> patch() {
+        return new ResponseEntity<String>("PATCH Response", HttpStatus.OK);
     }
-*/
+
 
 }
