@@ -13,7 +13,7 @@ import java.util.List;
 import java.util.Optional;
 
 @Service
-public class SongService {
+public class SongService implements ServiceInterface {
     private final SongMapps songMapper;
     private SongRepository songRepository;
 
@@ -23,17 +23,20 @@ public class SongService {
         this.songMapper=songMapper;
     }
 
+    @Override
     public List<SongDto> all() {
-        System.out.println("inne");
+
         return songMapper.mapp(songRepository.findAll());
     }
 
 
 
+    @Override
     public Optional<SongDto> getOne(Long id){
         return songMapper.mapp(songRepository.findById(id));
     }
 
+    @Override
     public SongDto create(SongDto songDto){
         System.out.println("<<<<<<<<<<<<<<<<<"+ songDto.toString());
         if (songDto.getTitle().isEmpty())
@@ -42,6 +45,7 @@ public class SongService {
         return songMapper.mapp(songRepository.save(songMapper.mapp(songDto)));
     }
 
+    @Override
     public void delete(Long id) {
         if (songRepository.findById(id).isPresent()){
             songRepository.deleteById(id);
@@ -53,6 +57,7 @@ public class SongService {
 
     }
 
+    @Override
     public SongDto replace(Long id, SongDto songDto) {
         Optional<Song> song =  songRepository.findById(id);
         if (song.isPresent()){
@@ -68,6 +73,7 @@ public class SongService {
 
     }
 
+    @Override
     public SongDto update(Long id, SongDto songDto) {
 
         Optional<Song> song =  songRepository.findById(id);
@@ -88,6 +94,7 @@ public class SongService {
 
 
     }
+    @Override
     public SongDto update(Long id, SongArtist songArtist) {
 
         Optional<Song> song =  songRepository.findById(id);
@@ -106,11 +113,17 @@ public class SongService {
 
     }
 
+    @Override
     public Optional<SongDto> find(Long id) {
 
        // var idLength =songMapper.mapp(songRepository.findById(id));
        // return idLength.orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "id " + id + " Not Found"));
 return songMapper.mapp(songRepository.findById(id));
 
+    }
+
+    @Override
+    public Optional<SongDto> findTitle(String title) {
+       return songMapper.mapp(songRepository.findByTitle(title));
     }
 }
