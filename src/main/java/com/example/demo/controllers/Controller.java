@@ -1,6 +1,9 @@
-package com.example.demo;
+package com.example.demo.controllers;
 
-import com.sun.xml.bind.v2.runtime.reflect.Accessor;
+import com.example.demo.entities.Song;
+import com.example.demo.dtos.SongDto;
+import com.example.demo.repository.SongRepository;
+import com.example.demo.services.SongService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -45,15 +48,43 @@ public class Controller {
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     public SongDto create(@RequestBody SongDto songDto){
-        System.out.println("---------------------"+songDto.toString());
         return songService.create(songDto);
+
+    }
+    @DeleteMapping("/songs/{id}")
+    void deleteSong(@PathVariable Long id){
+        songService.delete(id);
+    }
+    @PutMapping("/songs/put/{id}")
+    public SongDto replace(@RequestBody SongDto songDto,
+                             @PathVariable("id") Long id) {
+       return songService.replace(id,songDto);
+
+    }
+
+    @PatchMapping("/songs/patch/{id}")
+    public SongDto update(@RequestBody SongDto songDto,
+                           @PathVariable("id") Long id) {
+        return songService.update(id,songDto);
+
+    }
+    @PatchMapping("/songs/patch/artist/{id}")
+    public SongDto update(@RequestBody SongArtist SongArtist,
+                          @PathVariable("id") Long id) {
+        return songService.update(id,SongArtist);
 
     }
 
 
+    @GetMapping("/songs/find")
+    @ResponseBody
+    public SongDto getParameters(@RequestParam Long id) {
 
+        var result = songService.find(id);
+        return result.orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND,
+                "id " + id + " Not Found"));
 
-
+    }
 
 
 
@@ -66,42 +97,11 @@ public class Controller {
 
 
         
-    @PutMapping("/songs/put/{id}")
-    public Song saveResource(@RequestBody Song newSong,
-                                          @PathVariable("id") Long id) {
-        return songRepository.findById(id)
-                .map(song -> {
-                    song.setTitle(newSong.getTitle());
-                    song.setSongLength(newSong.getSongLength());
-                    song.setArtist(newSong.getArtist());
-                    return songRepository.save(song);
-                })
-                .orElseGet(() -> {
-                    newSong.setId(id);
-                    return songRepository.save(newSong);
-                });
 
 
 
 
-    }
 
-    @DeleteMapping("/songs/delete/{id}")
-    void deleteSong(@PathVariable Long id){
-        songRepository.deleteById(id);
 
-    }
 
-    @PatchMapping("/patch")
-    public @ResponseBody ResponseEntity<String> patch() {
-        return new ResponseEntity<String>("PATCH Response", HttpStatus.OK);
-    }
-
-    @GetMapping("/songs/find")
-    @ResponseBody
-    public Song getParameters(@RequestParam Long id) {
-        var idLength =songRepository.findById(id);
-        return idLength.orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "id " + id + " Not Found"));
-
-    }
 }
