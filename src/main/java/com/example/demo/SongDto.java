@@ -1,32 +1,31 @@
 package com.example.demo;
 
-import javax.persistence.*;
-
-@Entity
-@Table(name="songs")
-public class Song {
+public class SongDto {
 
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+
     private Long id;
 
-    public Song( String title, int songLength, String artist) {
+    @Override
+    public String toString() {
+        return "SongDto{" +
 
-        this.title = title;
-        this.songLength = songLength;
-        this.artist = artist;
+                " title='" + title + '\'' +
+                ", artist='" + artist + '\'' +
+                ", songLength=" + songLength +
+                '}';
     }
 
     private String title;
-    private int songLength;
     private String artist;
+    private int songLength;
 
-    public Song() {
+    public SongDto( String title,  int songLength,String artist) {
 
+        this.title = title;
+        this.artist = artist;
+        this.songLength = songLength;
     }
-
-
     public Long getId() {
         return id;
     }
@@ -47,8 +46,8 @@ public class Song {
         return songLength;
     }
 
-    public void setSongLength(int songLengt) {
-        this.songLength = songLengt;
+    public void setSongLength(int songLength) {
+        this.songLength = songLength;
     }
 
     public String getArtist() {
@@ -58,4 +57,10 @@ public class Song {
     public void setArtist(String artist) {
         this.artist = artist;
     }
+
+
+
+
+
+
 }

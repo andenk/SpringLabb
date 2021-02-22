@@ -1,5 +1,6 @@
 package com.example.demo;
 
+import com.sun.xml.bind.v2.runtime.reflect.Accessor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -11,6 +12,8 @@ import java.util.List;
 
 @RestController
 public class Controller {
+
+    private SongService songService;
 
     private SongRepository songRepository;
 
@@ -24,32 +27,42 @@ public class Controller {
     }
 
     @GetMapping("/songs")
-    public List<Song> all() {
-        return songRepository.findAll();
+    public List<SongDto> all() {
+        return songService.all();
     }
 
+    @GetMapping("/songs/{id}")
+    public SongDto findOne(@PathVariable Long id) {
+
+        var result = songService.getOne(id);
+        return result.orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND,
+                "id " + id + " Not Found"));
+
+    }
+    @PostMapping
+    @ResponseStatus(HttpStatus.CREATED)
+    public SongDto create(@RequestBody SongDto songDto){
+        System.out.println("---------------------"+songDto.toString());
+        return songService.create(songDto);
+
+    }
+
+
+
+
+
+
+
+
     @GetMapping("/songs/title/{title}")
-    public Song title(@PathVariable String title) {
+    public Song byTitle(@PathVariable String title) {
         var result = songRepository.findByTitle(title);
         return result.orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND,
                 "title " + title + " Not Found"));
     }
 
-    @GetMapping("/songs/{id}")
-    public Song one(@PathVariable Long id) {
 
-        var result = songRepository.findById(id);
-        return result.orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND,
-                "id " + id + " Not Found"));
-
-    }
-
-    @PostMapping
-    @ResponseStatus(HttpStatus.CREATED)
-    public Song create(@RequestBody Song song){
-       return songRepository.save(song);
-
-    }
+        
     @PutMapping("/songs/put/{id}")
     public Song saveResource(@RequestBody Song newSong,
                                           @PathVariable("id") Long id) {
@@ -57,6 +70,7 @@ public class Controller {
                 .map(song -> {
                     song.setTitle(newSong.getTitle());
                     song.setSongLength(newSong.getSongLength());
+                    song.setArtist(newSong.getArtist());
                     return songRepository.save(song);
                 })
                 .orElseGet(() -> {
