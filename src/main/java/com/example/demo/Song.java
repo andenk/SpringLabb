@@ -11,8 +11,8 @@ public class Song {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    public Song( String title, int songLength, String artist) {
-
+    public Song(Long id,  String title, int songLength, String artist) {
+        this.id = id;
         this.title = title;
         this.songLength = songLength;
         this.artist = artist;

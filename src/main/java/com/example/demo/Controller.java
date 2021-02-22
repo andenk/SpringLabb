@@ -18,9 +18,12 @@ public class Controller {
     private SongRepository songRepository;
 
     @Autowired
-    public Controller(SongRepository songRepository) {
-        this.songRepository = songRepository;
+    public Controller(SongService songService) {
+        this.songService = songService;
     }
+
+
+
     @GetMapping("/hello")
     public String hello() {
         return "hello";

@@ -20,8 +20,8 @@ public class SongDto {
     private String artist;
     private int songLength;
 
-    public SongDto( String title,  int songLength,String artist) {
-
+    public SongDto(Long id, String title, int songLength,String artist) {
+        this.id=id;
         this.title = title;
         this.artist = artist;
         this.songLength = songLength;

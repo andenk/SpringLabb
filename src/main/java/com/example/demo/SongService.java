@@ -1,5 +1,6 @@
 package com.example.demo;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -10,12 +11,13 @@ import java.util.stream.Collectors;
 public class SongService {
     private SongRepository songRepository;
 
+
     public SongService(SongRepository songRepository) {
         this.songRepository = songRepository;
     }
 
     public List<SongDto> all() {
-
+        System.out.println("inne");
         return mapp(songRepository.findAll());
     }
 
@@ -35,12 +37,12 @@ public class SongService {
 
     public SongDto mapp(Song song) {
 
-        return new SongDto( song.getTitle(),song.getSongLength(), song.getArtist());
+        return new SongDto(song.getId(), song.getTitle(),song.getSongLength(), song.getArtist());
     }
 
     public Song mapp(SongDto songDto){
 
-        return new Song(songDto.getTitle(), songDto.getSongLength(),songDto.getArtist());
+        return new Song(songDto.getId(),songDto.getTitle(), songDto.getSongLength(),songDto.getArtist());
     }
     public Optional<SongDto> mapp(Optional<Song> optionalSong){
        if (optionalSong.isEmpty())
