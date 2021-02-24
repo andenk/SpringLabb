@@ -1,4 +1,4 @@
-package com.example.demo;
+package com.example.demo.entities;
 
 import javax.persistence.*;
 
@@ -10,9 +10,21 @@ public class Song {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
+    public Song(Long id,  String title, int songLength, String artist) {
+        this.id = id;
+        this.title = title;
+        this.songLength = songLength;
+        this.artist = artist;
+    }
+
     private String title;
     private int songLength;
+    private String artist;
 
+    public Song() {
+
+    }
 
 
     public Long getId() {
@@ -39,4 +51,11 @@ public class Song {
         this.songLength = songLengt;
     }
 
+    public String getArtist() {
+        return artist;
+    }
+
+    public void setArtist(String artist) {
+        this.artist = artist;
+    }
 }
