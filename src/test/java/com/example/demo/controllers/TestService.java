@@ -9,7 +9,7 @@ import java.util.Optional;
 public class TestService implements ServiceInterface {
     @Override
     public List<SongDto> all() {
-        return null;
+        return List.of(new SongDto(1L, "Test", 3, "Test"),new SongDto(2L, "Test2", 3, "Test2"),new SongDto(3L, "Test3", 3, "Test3"));
     }
 
     @Override
