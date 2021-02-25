@@ -11,3 +11,9 @@ public class DemoApplication {
     }
 
 }
+
+
+/*
+propeties aplication för en
+
+ */

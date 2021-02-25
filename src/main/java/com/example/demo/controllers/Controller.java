@@ -1,5 +1,6 @@
 package com.example.demo.controllers;
 
+import com.example.demo.configuration.TestConfig;
 import com.example.demo.dtos.SongDto;
 import com.example.demo.services.ServiceInterface;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,16 +14,27 @@ import java.util.List;
 @RestController()
 public class Controller {
 
-    private ServiceInterface serviceInterface;
-
+    private final ServiceInterface serviceInterface;
+    private TestConfig testConfig;
    // private SongRepository songRepository;
 
     @Autowired
-    public Controller(ServiceInterface serviceInterface) {
+    public Controller(TestConfig testConfig, ServiceInterface serviceInterface) {
+this.testConfig= testConfig;
         this.serviceInterface = serviceInterface;
     }
 
+/*
+    public Controller(TestConfig testConfig, ServiceInterface serviceInterface) {
+        this.testConfig= testConfig;
+        this.serviceInterface = serviceInterface;
+    }
+    */
 
+    @GetMapping("/message")
+    public String message() {
+        return testConfig.getFoo();
+    }
 
     @GetMapping("/hello")
     public String hello() {
