@@ -3,6 +3,8 @@ package com.example.demo.controllers;
 import com.example.demo.configuration.TestConfig;
 import com.example.demo.dtos.SongDto;
 import com.example.demo.services.ServiceInterface;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
@@ -13,6 +15,7 @@ import java.util.List;
 
 @RestController()
 public class Controller {
+    Logger log = LoggerFactory.getLogger(Controller.class);
 
     private final ServiceInterface serviceInterface;
     private TestConfig testConfig;
@@ -20,7 +23,7 @@ public class Controller {
 
     @Autowired
     public Controller(TestConfig testConfig, ServiceInterface serviceInterface) {
-this.testConfig= testConfig;
+        this.testConfig= testConfig;
         this.serviceInterface = serviceInterface;
     }
 
@@ -38,7 +41,9 @@ this.testConfig= testConfig;
 
     @GetMapping("/hello")
     public String hello() {
+        log.info("Hello");
         return "hello";
+
     }
 
     @GetMapping("/songs")
