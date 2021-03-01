@@ -77,12 +77,14 @@ public class Controller {
     }
 
     @PatchMapping("/songs/patch/{id}")
+    @ResponseStatus(HttpStatus.CREATED)
     public SongDto update(@RequestBody SongDto songDto,
                            @PathVariable("id") Long id) {
         return serviceInterface.update(id,songDto);
 
     }
     @PatchMapping("/songs/patch/artist/{id}")
+    @ResponseStatus(HttpStatus.CREATED)
     public SongDto update(@RequestBody SongArtist SongArtist,
                           @PathVariable("id") Long id) {
         return serviceInterface.update(id,SongArtist);
@@ -99,8 +101,6 @@ public class Controller {
                 "id " + id + " Not Found"));
 
     }
-
-
 
     @GetMapping("/songs/title/{title}")
     public SongDto byTitle(@PathVariable String title) {

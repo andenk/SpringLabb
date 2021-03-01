@@ -22,6 +22,9 @@ import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.eq;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 /*
     @MockBean
@@ -59,15 +62,26 @@ ObjectMapper jsonMapper;
     }
     @Test
     void post() throws Exception {
+
         var songDto = new SongDto(1L,"",4,"");
 
-        Mockito.when(serviceInterfaceMockBean.create(any(SongDto.class))).thenReturn(new SongDto(1L, "t", 4, "a"));
+        Mockito.when(serviceInterfaceMockBean.create(eq(songDto))).thenReturn(new SongDto(1L, "t", 4, "a"));
 
-        var result = mockMvc.perform(MockMvcRequestBuilders.post("/songs")
+        var result = mockMvc.perform(MockMvcRequestBuilders.post("/")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(jsonMapper.writeValueAsBytes(songDto))
                 .accept(MediaType.APPLICATION_JSON)).andReturn();
+
         assertThat(result.getResponse().getStatus()).isEqualTo(201);
+
+
+    }
+
+
+    @Test
+    public void del() throws Exception {
+        mockMvc.perform(delete("/songs/1"))
+                .andExpect(status().isOk());
 
     }
 }
