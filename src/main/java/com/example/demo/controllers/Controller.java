@@ -46,12 +46,12 @@ public class Controller {
 
     }
 
-    @GetMapping("/")
+    @GetMapping("/songs")
     public List<SongDto> all() {
         return serviceInterface.all();
     }
 
-    @GetMapping("/{id}")
+    @GetMapping("/songs/{id}")
     public SongDto findOne(@PathVariable Long id) {
 
         var result = serviceInterface.getOne(id);
@@ -65,13 +65,13 @@ public class Controller {
         return serviceInterface.create(songDto);
 
     }
-    @DeleteMapping("/{id}")
+    @DeleteMapping("/songs/{id}")
     void deleteSong(@PathVariable Long id){
         serviceInterface.delete(id);
 
     }
 
-    @PutMapping("/{id}")
+    @PutMapping("/songs/{id}")
     public SongDto replace(@RequestBody SongDto songDto,
                              @PathVariable("id") Long id) {
 
@@ -79,14 +79,14 @@ public class Controller {
 
     }
 
-    @PatchMapping("/patch/{id}")
+    @PatchMapping("/songs/patch/{id}")
     @ResponseStatus(HttpStatus.CREATED)
     public SongDto update(@RequestBody SongDto songDto,
                            @PathVariable("id") Long id) {
         return serviceInterface.update(id,songDto);
 
     }
-    @PatchMapping("/{id}")
+    @PatchMapping("/songs/{id}")
     @ResponseStatus(HttpStatus.CREATED)
     public SongDto update(@RequestBody SongArtist SongArtist,
                           @PathVariable("id") Long id) {
@@ -95,7 +95,7 @@ public class Controller {
     }
 
 
-    @GetMapping("/find")
+    @GetMapping("/songs/find")
     @ResponseBody
     public SongDto getParameters(@RequestParam Long id) {
 
@@ -105,7 +105,7 @@ public class Controller {
 
     }
 
-    @GetMapping("/title/{title}")
+    @GetMapping("/songs/title/{title}")
     public SongDto byTitle(@PathVariable String title) {
         var result = serviceInterface.findTitle(title);
         return result.orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND,
