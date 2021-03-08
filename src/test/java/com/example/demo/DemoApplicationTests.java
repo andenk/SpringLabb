@@ -18,7 +18,7 @@ import static org.assertj.core.api.BDDAssertions.then;
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 class DemoApplicationTests {
     @LocalServerPort
-    int port=9090;
+    int port;
 
     @Autowired
     TestRestTemplate testClient;
@@ -28,21 +28,30 @@ class DemoApplicationTests {
 
     @Test
     void contextLoads() {
-       // HttpHeaders headers = new HttpHeaders();
-       // headers.add("Accept","application/xml");
-       var res=  testClient.getForEntity("http://localhost:"+port+"/songs", SongDto[].class);
-       assertThat(res.getStatusCode()).isEqualTo(HttpStatus.OK);
-        System.out.println(res);
-        assertThat(res.getBody().length).isGreaterThan(0);
+
+        initializeDatabase();
+        var result=  testClient.getForEntity("http://localhost:"+port+"/songs/", SongDto[].class);
+       assertThat(result.getStatusCode()).isEqualTo(HttpStatus.OK);
+        System.out.println(result);
+        assertThat(result.getBody().length).isGreaterThan(0);
     }
     @Test
     void contextGetFromID(){
-    SongDto songDto= new SongDto(1L,"t",2,"a");
-    var res=  testClient.getForEntity("http://localhost:"+port+"/songs/"+songDto.getId() ,SongDto.class);
-    assertThat(res.getStatusCode()).isEqualTo(HttpStatus.OK);
-
+        initializeDatabase();
+   // SongDto songDto= new SongDto(1L,"t",2,"a");
+    var result=  testClient.getForEntity("http://localhost:"+port+"/songs/1" ,SongDto.class);
+    assertThat(result.getStatusCode()).isEqualTo(HttpStatus.OK);
+        assertThat(result.getBody().getTitle()).isEqualTo("t");
+        assertThat(result.getBody().getArtist()).isEqualTo("a");
 
 }
+    private void initializeDatabase() {
+        SongDto songDto = new SongDto(1L, "test", 3, "artist");
+        SongDto songDto1 = new SongDto(2L, "t", 2, "a");
+        testClient.postForEntity("http://localhost:" + port + "/songs", songDto, SongDto.class);
+        testClient.postForEntity("http://localhost:" + port + "/songs", songDto1, SongDto.class);
+    }
+
     @Test
     void contextGetFromParamets(){
        var res=  testClient.getForEntity("http://localhost:"+port+"/songs/find?id=1",SongDto.class);
@@ -52,28 +61,39 @@ class DemoApplicationTests {
     }
     @Test
     void Post() {
-       HttpHeaders headers = new HttpHeaders();
-         headers.add("Accept","application/xml");
-         SongDto songDto= new SongDto(1L,"t",2,"a");
+      // HttpHeaders headers = new HttpHeaders();
+    //     headers.add("Accept","application/xml");
+         SongDto songDto= new SongDto(1L,"t",2,"apost");
         var res=  testClient.postForEntity("http://localhost:"+port+"/",songDto, SongDto.class);
         assertThat(res.getStatusCode()).isEqualTo(HttpStatus.CREATED);
+
+        var resultGet = testClient.getForEntity("http://localhost:" + port + "/songs/" + songDto.getId(),SongDto.class);
+        assertThat(resultGet.getBody().getArtist()).isEqualTo("apost");
 
 
     }
     @Test
     void deleteFromVarableTest() {
-
-         testClient.delete("http://localhost:"+port+"/songs/2");
-        var res=  testClient.getForEntity("http://localhost:"+port+"/songs/2",SongDto.class);
+        SongDto songDto= new SongDto(1L,"t",2,"apost");
+        testClient.postForEntity("http://localhost:"+port+"/songs", songDto, SongDto.class);
+        testClient.delete("http://localhost:"+port+"/songs/1");
+        var res=  testClient.getForEntity("http://localhost:"+port+"/songs/1",SongDto.class);
 
         assertThat(res.getStatusCode()).isEqualTo(HttpStatus.NOT_FOUND);
 
     }
     @Test
     void put() {
+
+
+        SongDto songDtoCreate= new SongDto(1L,"test",2,"artist");
+
+        testClient.postForEntity("http://localhost:"+port+"/songs", songDtoCreate, SongDto.class);
+
+
         SongDto songDto= new SongDto(1L,"t",2,"a");
 
-        testClient.put("http://localhost:"+port+"/songs/1",songDto);
+        testClient.put("http://localhost:"+port+"/songs/1",songDto,SongDto.class);
 
         var res=  testClient.getForEntity("http://localhost:"+port+"/songs/1",SongDto.class);
 
@@ -88,7 +108,11 @@ class DemoApplicationTests {
     @Test
     void patch(){
 
-        SongDto songDto= new SongDto(1L,"testpatch",2,"testpatch");
+        SongDto songDtoCreate= new SongDto(1L,"test",2,"test");
+
+        testClient.postForEntity("http://localhost:"+port+"/songs", songDtoCreate, SongDto.class);
+
+        SongDto songDto= new SongDto(1L,"test",2,"testpatch");
 
         testClient.patchForObject("http://localhost:9090/songs/1",songDto,SongDto.class);
         var res=  testClient.getForEntity("http://localhost:"+port+"/songs/1",SongDto.class);

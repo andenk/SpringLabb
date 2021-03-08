@@ -24,4 +24,5 @@ public interface ServiceInterface {
     Optional<SongDto> find(Long id);
 
     Optional<SongDto> findTitle(String title);
+
 }
